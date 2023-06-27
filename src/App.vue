@@ -1,6 +1,9 @@
 <template>
   <div>
-    我是APP
+    <h1>svg测试</h1>
+    <svg>
+      <use xlink:href="#icon-ljnttt"></use>
+    </svg>
   </div>
 </template>
 
