@@ -19,6 +19,10 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+  div{
+    h1{
+      color: $color;
+    }
+  }
 </style>

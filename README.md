@@ -110,19 +110,19 @@ export default defineConfig({
 
 #### SVG图标的配置
 
-安装SVG依赖插件
+1.安装SVG依赖插件
 
 ```
 pnpm install vite-plugin-svg-icons
 ```
 
-在 vite.config.ts中配置插件
+2.在 vite.config.ts中配置插件
 
 ```
  pnpm install vite-plugin-svg-icons
 ```
 
-修改vite.config.ts文件
+3.修改vite.config.ts文件
 
 ```ts
 import vue from '@vitejs/plugin-vue'
@@ -144,9 +144,14 @@ export default defineConfig({
  pnpm install fast-glob -D
 ```
 
+4.入口文件导入
 
+```
+// svg插件需要配置的代码
+import 'virtual:svg-icons-register'
+```
 
-使用：
+5.使用：
 
 1. assets文件下新建icons文件并创建svg文件
 
@@ -171,4 +176,117 @@ export default defineConfig({
    ```
 
    
+   
+   #### svg封装为全局组件
+   
+   因为项目很多模块需要使用图标,因此把它封装为全局组件！！！
+   
+   **在src/components目录下创建一个SvgIcon组件:代表如下**
+   
+   ```
+   <template>
+     <div>
+       <svg :style="{ width: width, height: height }">
+         <use :xlink:href="prefix + name" :fill="color"></use>
+       </svg>
+     </div>
+   </template>
+   
+   <script setup lang="ts">
+   defineProps({
+     //xlink:href属性值的前缀
+     prefix: {
+       type: String,
+       default: '#icon-'
+     },
+     //svg矢量图的名字
+     name: String,
+     //svg图标的颜色
+     color: {
+       type: String,
+       default: ""
+     },
+     //svg宽度
+     width: {
+       type: String,
+       default: '16px'
+     },
+     //svg高度
+     height: {
+       type: String,
+       default: '16px'
+     }
+   
+   })
+   </script>
+   <style scoped></style>
+   ```
+   
+   在src文件夹目录下创建一个index.ts文件：用于注册components文件夹内部全部全局组件！！！
+   
+   ```
+   import SvgIcon from './SvgIcon/index.vue';
+   import type { App, Component } from 'vue';
+   const components: { [name: string]: Component } = { SvgIcon };
+   export default {
+       install(app: App) {
+           Object.keys(components).forEach((key: string) => {
+               app.component(key, components[key]);
+           })
+       }
+   }
+   ```
+   
+   在入口文件引入src/index.ts文件,通过app.use方法安装自定义插件
+   
+   ```
+   import gloablComponent from './components/index';
+   app.use(gloablComponent);
+   ```
+   
 
+#### 集成Sass
+
+我们目前在组件内部已经可以使用scss样式,因为在配置styleLint工具的时候，项目当中已经安装过sass sass-loader,因此我们再组件内可以使用scss语法！！！需要加上lang="scss"
+
+```
+<style scoped lang="scss"></style>
+```
+
+接下来我们为项目添加一些全局的样式
+
+在src/styles目录下创建一个index.scss文件，当然项目中需要用到清除默认样式，因此在index.scss引入reset.scss
+
+```
+@import './reset.scss';
+```
+
+在入口文件引入
+
+```
+import '@/styles/index.scss'
+```
+
+但是你会发现在src/styles/index.scss全局样式文件中没有办法使用$变量.因此需要给项目中引入全局变量$.
+
+在style/variable.scss创建一个variable.scss文件！
+
+在vite.config.ts文件配置如下:
+
+```
+export default defineConfig((config) => {
+	css: {
+      preprocessorOptions: {
+        scss: {
+          javascriptEnabled: true,
+          additionalData: '@import "./src/styles/variable.scss";',
+        },
+      },
+    },
+	}
+}
+```
+
+**`@import "./src/styles/variable.less";`后面的`;`不要忘记，不然会报错**!
+
+配置完毕你会发现scss提供这些全局变量可以在组件样式中使用了！！！

@@ -12,6 +12,7 @@
     "@element-plus/icons-vue": "^2.1.0",
     "element-plus": "^2.3.7",
     "path": "^0.12.7",
+    "sass": "^1.63.6",
     "vite-plugin-svg-icons": "^2.0.1",
     "vue": "^3.2.47"
   },
