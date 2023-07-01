@@ -1,28 +1,30 @@
 <template>
   <div>
-    <h1>svg测试</h1>
-    <svg>
-      <use xlink:href="#icon-ljnttt"></use>
-    </svg>
+    <h1>测试axios二次封装</h1>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import request from '@/utils/request'
+import { defineComponent, onMounted } from 'vue'
 
 export default defineComponent({
-  setup () {
-    
-
+  setup() {
+    onMounted(() => {
+      request({
+        url: '/user/login',
+        method: 'post',
+        data: {
+          username: 'admin',
+          password: '111111'
+        }
+      }).then(res => {
+        console.log(res);
+      })
+    })
     return {}
   }
 })
 </script>
 
-<style scoped lang="scss">
-  div{
-    h1{
-      color: $color;
-    }
-  }
-</style>
+<style scoped></style>
