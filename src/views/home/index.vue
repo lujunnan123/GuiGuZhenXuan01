@@ -1,18 +1,18 @@
 <template>
-  <div>
-    <router-view></router-view>
-  </div>
+    <div>
+        <h1>我是一级路由-登录成功后的数据</h1>
+    </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  setup () {
-    
+    setup () {
+        
 
-    return {}
-  }
+        return {}
+    }
 })
 </script>
 

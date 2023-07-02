@@ -317,7 +317,7 @@ export default ({ command })=> {
 }
 ```
 
-在根目录创建mock文件夹:去创建我们需要mock数据与接口！！！
+在**根目录**创建mock文件夹:去创建我们需要mock数据与接口！！！
 
 在mock文件夹内部创建一个user.ts文件
 
@@ -400,3 +400,50 @@ pnpm install axios
 ```
 
 最后通过axios测试接口！！！
+
+### API接口统一管理
+
+在开发项目的时候,接口可能很多需要统一管理。在src目录下去创建api文件夹去统一管理项目的接口；
+
+比如:下面方式
+
+```
+//统一管理咱们项目用户相关的接口
+
+import request from '@/utils/request'
+
+import type {
+
+ loginFormData,
+
+ loginResponseData,
+
+ userInfoReponseData,
+
+} from './type'
+
+//项目用户相关的请求地址
+
+enum API {
+
+ LOGIN_URL = '/admin/acl/index/login',
+
+ USERINFO_URL = '/admin/acl/index/info',
+
+ LOGOUT_URL = '/admin/acl/index/logout',
+
+}
+//登录接口
+export const reqLogin = (data: loginFormData) =>
+ request.post<any, loginResponseData>(API.LOGIN_URL, data)
+//获取用户信息
+
+export const reqUserInfo = () =>
+
+ request.get<any, userInfoReponseData>(API.USERINFO_URL)
+
+//退出登录
+
+export const reqLogout = () => request.post<any, any>(API.LOGOUT_URL)
+```
+

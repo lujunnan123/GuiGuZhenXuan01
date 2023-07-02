@@ -4,6 +4,9 @@ import 'element-plus/dist/index.css'
 import App from '@/App.vue'
 //  测试假接口能否使用
 import axios from 'axios';
+// 引入路由
+import router from './router'
+
 // 登录接口
 axios({
     url:'/api/user/login',
@@ -22,3 +25,6 @@ import 'virtual:svg-icons-register'
 // 引入模板的全局样式
 import "@/styles/index.scss"
 app.mount('#app')
+
+// 注册路由
+app.use(router);
