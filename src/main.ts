@@ -6,6 +6,8 @@ import App from '@/App.vue'
 import axios from 'axios';
 // 引入路由
 import router from './router'
+// 引入仓库
+import pinia from './store';
 // svg插件需要配置的代码
 import 'virtual:svg-icons-register'
 // 引入模板的全局样式
@@ -25,5 +27,6 @@ const app = createApp(App)
 
 // 注册路由
 app.use(router);
-app.use(ElementPlus)
+app.use(ElementPlus);
+app.use(pinia)
 app.mount('#app')

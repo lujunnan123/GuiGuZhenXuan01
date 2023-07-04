@@ -6,9 +6,9 @@
 
 ## 搭建后台管理系统
 
-### 2.1项目初始化
+### 项目初始化
 
-#### 2.1.1项目配置
+#### 项目配置
 
 ##### eslint配置
 
@@ -24,7 +24,7 @@ pnpm i eslint -D
 npx eslint --init
 ```
 
-### 2.1.2 项目集成
+###  项目集成
 
 #### element plus 集成
 
@@ -447,4 +447,136 @@ export const reqUserInfo = () =>
 export const reqLogout = () => request.post<any, any>(API.LOGOUT_URL)
 ```
 
-### 
+### 项目构建
+
+#### login登录组件
+
+##### 创建仓库
+
+安装pinia
+
+```
+pnpm i pinia@2.0.34
+```
+
+创建大仓库
+
+```ts
+src\store\index.ts
+// 大仓库
+import { createPinia } from "pinia";
+// 创建大仓库
+let pinia = createPinia();
+// 对外暴露：入口文件需要安装仓库
+export default pinia;
+```
+
+引入pinia
+
+```ts
+main.ts
+// 引入仓库
+import pinia from './store';
+app.use(pinia)
+```
+
+创建小仓库
+
+```ts
+src\store\modules\user.ts
+// 创建用户相关的小仓库
+import { defineStore } from "pinia";
+// 创建用户小仓库
+let useUserStore = defineStore('User',{
+    // 存储数据地方
+    state:()=>{
+        return {}
+    },
+    // 异步|逻辑地方
+    actions:{
+
+    },
+    getters:{
+
+    }
+})
+// 对外暴露获取小仓库的方法
+export default useUserStore;
+```
+
+##### 绑定方法
+
+给按钮绑定方法（并将表单数据传到仓库），点击按钮后通知仓库发登录请求
+
+```ts
+const login = ()=>{
+    // 点击按钮后
+        // 通知仓库发登录请求
+        // 请求成功->首页展示数据的地方
+        // 请求失败-> 弹出登录失败信息
+        useStore.userLogin(loginForm)    
+}
+```
+
+给仓库中的actons添加发送请求
+
+```tsx
+// 引入数据类型
+import {loginForm} from "@/api/user/type"
+// 引入接口
+import { reqLogin } from "@/api/user";
+let useUserStore = defineStore('User',{
+	......
+    // 异步|逻辑地方
+    actions:{
+        // 用户登录的方法
+        async userLogin(data:loginForm){
+            let res = await reqLogin(data);   
+            console.log(res);                     
+        }
+    },
+    ......
+})
+```
+
+进行优化
+
+```ts
+// 创建用户相关的小仓库
+import { defineStore } from "pinia";
+// 引入数据类型
+import {loginForm} from "@/api/user/type"
+// 引入接口
+import { reqLogin } from "@/api/user";
+// 创建用户小仓库
+let useUserStore = defineStore('User',{
+    // 存储数据地方
+    state:()=>{
+        return {
+            token:'',// 用户唯一标识
+        }
+    },
+    // 异步|逻辑地方
+    actions:{
+        // 用户登录的方法
+        async userLogin(data:loginForm){
+            let result = await reqLogin(data);   
+            // 登录成功：200 -> token
+            // 登录失败：201 -> 显示登录失败信息
+            if(result.code == 200){
+                // pinia存储一下token
+                // 由于pinia|vuex存储数据其实利用的是js对象（js对象存储数据并非持久化）
+                this.token = result.data.token;
+                // 因此还需利用localStorage进行本地存储
+                localStorage.setItem("TOKEN",result.data.token)   
+            }else{
+
+            }                   
+        }
+    },
+
+})
+// 对外暴露获取小仓库的方法
+export default useUserStore;
+```
+

@@ -14,14 +14,14 @@ export interface loginResponseData{
 }
 interface userinfo{
     userId:number,
-    avatar:String,
-    username:String,
-    password:String,
-    desc:String,
-    roles:String[],
-    buttons:String[],
-    routers:String[],
-    token:String
+    avatar:string,
+    username:string,
+    password:string,
+    desc:string,
+    roles:string[],
+    buttons:string[],
+    routers:string[],
+    token:string
 }
 interface user{
     checkUser:userinfo
