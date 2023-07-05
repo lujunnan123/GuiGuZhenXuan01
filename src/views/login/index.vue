@@ -26,7 +26,8 @@ import {User,Lock} from '@element-plus/icons-vue'
 import { reactive, ref } from 'vue';
 import useUserStore from '@/store/modules/user';
 import { useRouter } from 'vue-router';
-import { ElNotification } from 'element-plus'
+import { ElNotification } from 'element-plus';
+import {getTime} from '@/utils/time';
 let useStore = useUserStore();
 // 收集账号与密码
 let loginForm = reactive({username:'admin',password:'111111'})
@@ -48,13 +49,14 @@ const login = async ()=>{
             await useStore.userLogin(loginForm);
             // 编程式导航，跳转到展示数据首页
             $router.push('/')
-            // 登录成功提示信息
+            // 登录成功提示信息   
             ElNotification({
                 type:'success',
-                message:'登录成功'
+                message:'欢迎回来',
+                title:`HI,${getTime()}好！`
             })
         }  catch(error){
-            loading.value = false
+            // loading.value = false
             ElNotification({
                 type:'error',
                 message:(error as Error).message

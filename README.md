@@ -539,7 +539,9 @@ let useUserStore = defineStore('User',{
 })
 ```
 
-进行优化
+------
+
+完整代码：
 
 ```ts
 // 创建用户相关的小仓库
@@ -553,7 +555,7 @@ let useUserStore = defineStore('User',{
     // 存储数据地方
     state:()=>{
         return {
-            token:'',// 用户唯一标识
+            token:localStorage.getItem("TOKEN"),// 用户唯一标识
         }
     },
     // 异步|逻辑地方
@@ -574,7 +576,9 @@ let useUserStore = defineStore('User',{
             }                   
         }
     },
+    getters:{
 
+    }
 })
 // 对外暴露获取小仓库的方法
 export default useUserStore;
