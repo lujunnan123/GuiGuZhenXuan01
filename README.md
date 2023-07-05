@@ -584,3 +584,81 @@ let useUserStore = defineStore('User',{
 export default useUserStore;
 ```
 
+##### 输入校验
+
+:model  表单收集，收集到哪个地方
+
+:rules	校验规则
+
+prop 	`model` 的键名，它可以是一个路径数组
+
+```vue
+<el-form class="login_form" :model="loginForm" :rules="rules">
+	...
+	<el-form-item prop="username">
+	...
+	<el-form-item prop="password">
+        
+<script setup lang='ts'>
+// 收集账号与密码
+let loginForm = reactive({username:'admin',password:'111111'})
+
+// 表单校验需要配置的对象 (校验规则)
+const rules ={
+    username:[
+        { required:true, min:5,message:'用户名格式不正确',trigger:'blur'}
+    ],
+    password:[{required: true, min: 6, max: 15, message: '密码格式不正确', trigger: 'change'}]
+ }
+</script>
+```
+
+统一验证：只有表单数据格式都正确的情况下，才能发送请求
+
+```vue
+<el-form class="login_form" :model="loginForm" :rules="rules" ref="loginForms">
+	...
+<script setup>
+// 获取el-form组件
+let loginForms = ref();
+// 登录按钮回调
+const login = async () => {
+    // 发送请求之前，保证全部表单项校验通过
+    await loginForms.value.validate(); 
+    ...
+}
+</script>
+```
+
+###### 自定义校验
+
+（使用正则）
+
+```vue
+
+<script setup>
+// 自定义校验规则函数
+// 自定义校验规则函数
+const validatorUserName = (rule:any,value:any,callback:any)=>{
+    // 形参可以不用，但是必须写 占位
+    // 参数 rule:即为校验规则对象
+    // 参数 value:即为表单元素文本内容
+    // 参数 callback:即为规则放行函数 符合条件通过callback放行；不符合通过callback注入错误信息
+    if(value.length >= 5){ // 正则：if(/^/d{5,9}$/.test(value))
+        callback()
+    }else{
+        callback(new Error('账号长度>5'))
+    }  
+}
+// 表单校验需要配置的对象 (校验规则)
+const rules ={
+    username:[
+        // validator定义一个校验规则函数
+       {trigger:'change',validator:validatorUserName}
+    ],
+    password:[
+       {trigger:'change',validator:validatorUserName}]
+ }
+</script>
+```
+
