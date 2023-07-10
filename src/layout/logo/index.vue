@@ -1,0 +1,29 @@
+<template>
+    <div class="logo">
+        <img  :src="setting.logo" alt="">
+        <p>{{setting.title}}</p>
+    </div>
+</template>
+
+<script setup lang="ts">
+import setting from '@/setting.ts'
+</script>
+
+<style scoped lang="scss">
+.logo{
+    width:100%;
+    height:$base-menu-logo-height;
+    display:flex;
+    align-items:center;
+    color:white;
+    padding-left:20px    
+    img{
+        width:40px;
+        height:40px;
+    }
+    p{
+        margin-left:10px;
+        font-size:$base-menu-title-size;
+    }
+}
+</style>
