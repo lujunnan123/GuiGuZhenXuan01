@@ -718,6 +718,7 @@ let userStore = useUserStore();
 子组件中使用
 
 ```vue
+
 <template>
         <template v-for="(item, index) in menuList" :key="item.path">
             <!-- 情况一：没有子路由 -->

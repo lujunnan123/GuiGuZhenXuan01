@@ -5,11 +5,11 @@
             <div class="layout_slider">
                 <Logo />
                 <!-- 展示菜单 -->
-                <scrollbar class="scrollbar">
+                <el-scrollbar class="scrollbar">
                     <el-menu class="el-menu" background-color="#001529" text-color="#fff" active-text-color>
                         <Menu :menuList="userStore.menuRoutes"></Menu>
                     </el-menu>
-                </scrollbar>
+                </el-scrollbar>
 
             </div>
             <!-- 顶部导航 -->
@@ -17,7 +17,9 @@
                 2!!!
             </div>
             <!-- 内容展示区 -->
-            <div class="layout_main">3###</div>
+            <div class="layout_main">
+                <router-view></router-view>
+            </div>
         </div>
     </div>
 </template>

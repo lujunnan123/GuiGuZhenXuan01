@@ -27,11 +27,11 @@ axios({
 // createApp(App).mount('#app')
 const app = createApp(App)
 
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+    app.component(key, component)
+  }
 // 注册路由
 app.use(router);
 app.use(ElementPlus);
 app.use(pinia);
-for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-    app.component(key, component)
-  }
 app.mount('#app')
