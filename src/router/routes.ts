@@ -6,7 +6,8 @@ export const constantRoute = [
         name:'login' ,//命名路由
         meta:{
             title:'登录',
-            hidden:true   // 决定路由标题在菜单中是否隐藏 true隐藏 false不隐藏
+            hidden:true,   // 决定路由标题在菜单中是否隐藏 true隐藏 false不隐藏
+            icon:'Position'
         }
     },
     {
@@ -15,7 +16,8 @@ export const constantRoute = [
         name:'layout', //命名路由
         meta:{
             title:'layout',
-            hidden:true
+            hidden:true,
+            icon:'UserFilled'
         },
         children:[
             {
@@ -23,7 +25,8 @@ export const constantRoute = [
                 component:()=>{'@/views/home/index.vue'},
                 meta:{
                     title:'首页',
-                    hidden:true
+                    hidden:true,
+                    icon:'HomeFilled'
                 },
             },
             {
@@ -31,7 +34,8 @@ export const constantRoute = [
                 component:()=>{'@/views/home/index.vue'},
                 meta:{
                     title:'测试',
-                    hidden:true
+                    hidden:true,
+                    icon:'View'
                 }
             }
         ]
@@ -42,7 +46,8 @@ export const constantRoute = [
         name:'404', //命名路由
         meta:{
             title:'404',
-            hidden:false
+            hidden:false,
+            icon:'Close'
         },
     },
     {
@@ -51,7 +56,8 @@ export const constantRoute = [
         name:'Any', //命名路由
         meta:{
             title:'任意路由',
-            hidden:false
+            hidden:false,
+            icon:'Connection'
         },
     }
 ]

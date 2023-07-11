@@ -12,6 +12,8 @@ import pinia from './store';
 import 'virtual:svg-icons-register'
 // 引入模板的全局样式
 import "@/styles/index.scss"
+// 引入ELPLUS图标
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 // 登录接口
 axios({
@@ -28,5 +30,8 @@ const app = createApp(App)
 // 注册路由
 app.use(router);
 app.use(ElementPlus);
-app.use(pinia)
+app.use(pinia);
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+    app.component(key, component)
+  }
 app.mount('#app')
