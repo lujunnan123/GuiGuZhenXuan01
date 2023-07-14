@@ -1,5 +1,5 @@
 <template>
-    <template v-for="(item, index) in menuList" :key="item.path">
+    <template v-for="(item) in menuList" :key="item.path">
         <!-- 情况一：没有子路由 -->
         <el-menu-item :index="item.path" v-if="!item.children && !item.meta.hidden" @click="goRoute">
             <template #title>

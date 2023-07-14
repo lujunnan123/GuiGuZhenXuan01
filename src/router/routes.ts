@@ -88,7 +88,7 @@ export const constantRoute = [
     {
         path: '/product',
         component: () =>import('@/layout/index.vue' ),
-        name: 'Acl',
+        name: 'Product',
         meta: {
             title: '商品管理',
             hidden: false,

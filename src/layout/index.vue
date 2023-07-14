@@ -6,7 +6,7 @@
                 <Logo />
                 <!-- 展示菜单 -->
                 <el-scrollbar class="scrollbar">
-                    <el-menu class="el-menu" background-color="#001529" text-color="#fff" active-text-color>
+                    <el-menu class="el-menu" background-color="#001529" text-color="#fff" :default-active="$route.path">
                         <Menu :menuList="userStore.menuRoutes"></Menu>
                     </el-menu>
                 </el-scrollbar>
@@ -14,11 +14,11 @@
             </div>
             <!-- 顶部导航 -->
             <div class="layout_tabble">
-                2!!!
+                <Tabbar></Tabbar>
             </div>
             <!-- 内容展示区 -->
             <div class="layout_main">
-                <router-view></router-view>
+                <Main></Main>
             </div>
         </div>
     </div>
@@ -28,31 +28,37 @@
 
 // 引入左侧菜单logo子组件
 import Logo from './logo/index.vue';
+// 引入左侧菜单列表
 import Menu from './menu/index.vue';
+// 引入右侧主体内容
+import Main from './main/index.vue';
+// 引入顶部栏
+import Tabbar from './tabbar/index.vue';
 
 // 获取用户相关的小仓库
 import useUserStore from '@/store/modules/user';
-
+import { useRoute } from 'vue-router';
+let $route = useRoute()
 let userStore = useUserStore();
 
 </script>
 
 <style scoped lang="scss">
 .layout_container {
-    background: yellow;
     width: 100%;
     height: 100vh;
-    color: white;
 
     .layout_slider {
         background: $base-menu-background;
         width: $base-menu-width;
         height: 100vh;
+        color: white;
 
         .scrollbar {
             width: 100%;
             height: calc(100vh - $base-menu-logo-height);
-            .el-menu{
+
+            .el-menu {
                 border-right: none;
             }
         }
@@ -62,7 +68,7 @@ let userStore = useUserStore();
         position: fixed;
         top: 0;
         left: $base-menu-width;
-        background: blue;
+        color: #000000;
         width: calc(100% - $base-menu-width);
         height: $base-tabbar-height;
     }
