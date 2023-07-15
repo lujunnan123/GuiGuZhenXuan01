@@ -1,8 +1,10 @@
 <template>
     <div class="contain">
+        <!-- 顶部左侧静态 -->
         <div class="bar_left">
             <Breadcrumb/>
         </div>
+        <!-- 顶部右侧按钮 -->
         <div class="bar_right">
            <Setting/>
         </div>
@@ -10,8 +12,14 @@
 </template>
 
 <script setup lang="ts">
+
 import Breadcrumb from './breadcrumb/index.vue';
 import Setting from './setting/index.vue';
+</script>
+<script lang="ts">
+export default {
+    name: 'Tabbar'
+}
 </script>
 <style scoped lang="scss">
 .contain {

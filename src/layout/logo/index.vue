@@ -8,6 +8,11 @@
 <script setup lang="ts">
 import setting from '@/setting.ts'
 </script>
+<script lang="ts">
+export default {
+    name: 'Logo'
+}
+</script>
 
 <style scoped lang="scss">
 .logo{

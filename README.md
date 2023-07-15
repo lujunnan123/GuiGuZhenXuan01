@@ -762,3 +762,53 @@ export desfault{
 </style>
 ```
 
+##### 菜单折叠效果实现
+
+- 图标变换
+
+创建pinia仓库，创建fold变量，用于是否展示左侧菜单
+
+```ts
+src\layout\tabbar\breadcrumb\index.vue
+// 关于 layout组件 相关配置仓库
+import { defineStore } from "pinia";
+let useLayOutSettingStore = defineStore('SettingStore',{
+    state:()=>{
+        return {
+            fold:false, //用于控制菜单折叠还是收起控制
+        }
+    }
+})
+export default useLayOutSettingStore;
+```
+
+导入使用
+
+```js
+
+import useLayOutSettingStore from '@/store/modules/setting'
+// 获取layout配置相关的仓库
+let LayoutSettingStore = useLayOutSettingStore();
+
+// 点击图标方法
+const changeIcon = ()=>{
+    // 图标切换
+    LayoutSettingStore.fold = !LayoutSettingStore.fold ;
+}
+```
+
+- 折叠效果实现
+
+```vue
+src\layout\index.vue
+
+ <!-- 为左侧菜单添加一个动态类 -->
+<div class="layout_slider" :class="{fold:LayoutSettingStore.fold?true:false}">
+<style lang="scss">
+&.fold{
+   	width:calc(100vw - $base-menu-min-width);
+    left:$base-menu-min-width ;
+}    
+</style>
+```
+

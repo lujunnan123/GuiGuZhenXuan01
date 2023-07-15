@@ -2,22 +2,22 @@
     <div>
         <div class="layout_container">
             <!-- 左侧菜单 -->
-            <div class="layout_slider">
+            <div class="layout_slider" :class="{fold:LayoutSettingStore.fold?true:false}">
                 <Logo />
                 <!-- 展示菜单 -->
-                <el-scrollbar class="scrollbar">
-                    <el-menu class="el-menu" background-color="#001529" text-color="#fff" :default-active="$route.path">
+                <el-scrollbar  class="scrollbar">
+                    <el-menu :collapse="LayoutSettingStore.fold" class="el-menu" background-color="#001529" text-color="#fff" :default-active="$route.path">
                         <Menu :menuList="userStore.menuRoutes"></Menu>
                     </el-menu>
                 </el-scrollbar>
 
             </div>
             <!-- 顶部导航 -->
-            <div class="layout_tabble">
+            <div class="layout_tabble"  :class="{fold:LayoutSettingStore.fold?true:false}">
                 <Tabbar></Tabbar>
             </div>
             <!-- 内容展示区 -->
-            <div class="layout_main">
+            <div class="layout_main" :class="{fold:LayoutSettingStore.fold?true:false}">
                 <Main></Main>
             </div>
         </div>
@@ -38,6 +38,11 @@ import Tabbar from './tabbar/index.vue';
 // 获取用户相关的小仓库
 import useUserStore from '@/store/modules/user';
 import { useRoute } from 'vue-router';
+
+import useLayOutSettingStore from '@/store/modules/setting';
+let LayoutSettingStore = useLayOutSettingStore()
+
+
 let $route = useRoute()
 let userStore = useUserStore();
 
@@ -53,6 +58,10 @@ let userStore = useUserStore();
         width: $base-menu-width;
         height: 100vh;
         color: white;
+        transition: all 0.3s;
+        &.fold{
+            width: $base-menu-min-width;
+        }
 
         .scrollbar {
             width: 100%;
@@ -71,6 +80,10 @@ let userStore = useUserStore();
         color: #000000;
         width: calc(100% - $base-menu-width);
         height: $base-tabbar-height;
+        &.fold{
+            width:calc(100vw - $base-menu-min-width);
+            left:$base-menu-min-width ;
+        }
     }
 
     .layout_main {
@@ -82,6 +95,16 @@ let userStore = useUserStore();
         top: $base-tabbar-height;
         padding: 20px;
         overflow: auto;
+        &.fold{
+            width:calc(100vw - $base-menu-min-width);
+            left:$base-menu-min-width ;
+            transition:all 0.3s;
+        }
     }
 }
 </style>
+<script lang="ts">
+export default {
+    name: 'Layout'
+}
+</script>
