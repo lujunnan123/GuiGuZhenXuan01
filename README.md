@@ -812,3 +812,105 @@ src\layout\index.vue
 </style>
 ```
 
+##### 面包屑动态展示
+
+导入route 利用route中的matched属性获取当前路由路径
+
+```vue
+src\layout\tabbar\breadcrumb\index.vue
+
+<el-breadcrumb-item v-for="(item,index) in $route.matched" :key="index">
+       <span>{{item.meta.title}}</span>
+</el-breadcrumb-item>
+
+import { useRoute } from 'vue-router';
+let $route = useRoute();
+```
+
+
+
+小细节：当点击一级菜单（没有子菜单的菜单）只展示一级菜单，而不展示其它菜单标题。例：首页
+
+```vue
+<el-breadcrumb-item v-for="(item,index) in $route.matched" :key="index" v-show="item.meta.title">
+```
+
+
+
+##### 刷新业务实现
+
+因为刷新按钮和内容展示页面不同属于一个组件，因此涉及组件间通信。
+
+实现：点击刷新按钮后，把对应的路由组件进行销毁再创建，再向服务器重新发送请求，请求展示数据。
+
+步骤：
+
+在pinia仓库中创建refsh变量，用于标记刷新状态。
+
+```ts
+src\store\modules\setting.ts
+// 关于 layout组件 相关配置仓库
+import { defineStore } from "pinia";
+let useLayOutSettingStore = defineStore('SettingStore',{
+    state:()=>{
+        return {
+            refsh:false,// 仓库这个属性用于控制刷新效果
+        }
+    }
+})
+export default useLayOutSettingStore;
+```
+
+点击刷新按钮后，对刷新状态（refsh变量）进行置反。
+
+```vue
+src\layout\tabbar\setting\index.vue
+<template>
+    <el-button type="primary" icon="Refresh" circle @click="updateRef" />
+	......
+</template>
+<script setup lang="ts">
+import useLayOutSettingStore from '@/store/modules/setting';
+let layoutSettingStore = useLayOutSettingStore();
+const updateRef = ()=>{
+    layoutSettingStore.refsh = !layoutSettingStore.refsh;
+}
+</script>
+```
+
+在内容展示组件中，监听刷新状态（refsh变量）的变化。当变化时，对组件进行 销毁再创建，请求展示数据。
+
+```vue
+src\layout\main\index.vue
+<template>
+    <div >
+        <transition>
+            <router-view v-slot="{Component}">
+                <transition name="fade">
+                    <component :is="Component" v-if="flag"></component>
+                </transition>
+            </router-view>
+        </transition>
+    </div>
+</template>
+
+<script setup lang="ts">
+import useLayOutSettingStore from '@/store/modules/setting'
+import { nextTick, ref, watch } from 'vue';
+let layoutSettingStore  = useLayOutSettingStore();
+
+// 控制当前组件是否销毁重建
+let flag = ref(true);
+
+// 监听仓库内部数据是否发生变化，如果发生变化，说明用户点击过刷新按钮
+watch(()=>layoutSettingStore.refsh,()=>{
+    console.log('123');
+    // 点击刷新按钮：路由组件销毁
+    flag.value = false;
+    nextTick(()=>{
+        flag.value = true
+    })
+})
+</script>
+```
+

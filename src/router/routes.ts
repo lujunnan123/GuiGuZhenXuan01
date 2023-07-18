@@ -15,7 +15,6 @@ export const constantRoute = [
         component: () => import('@/layout/index.vue'),
         name: 'layout', //命名路由
         meta: {
-            title: '',
             hidden: false,
             icon: ''
         },
@@ -94,6 +93,7 @@ export const constantRoute = [
             hidden: false,
             icon: 'ShoppingCartFull'
         },
+        redirect: '/product/trademark',
         children: [
             {
                 path: '/product/trademark',
