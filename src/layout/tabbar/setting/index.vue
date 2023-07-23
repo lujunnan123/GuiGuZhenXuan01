@@ -2,11 +2,11 @@
     <el-button type="primary" icon="Refresh" circle @click="updateRef" />
     <el-button type="primary" icon="FullScreen" circle @click="fullScreen" />
     <el-button type="primary" icon="Setting" circle />
-    <img src="../../../../public/vite.svg" alt="" style="width:24px;height:24px;margin:0 10px;">
+    <img :src="userStore.avatar" alt="" style="width:24px;height:24px;margin:0 10px;border-radius: 50%;">
     <!-- 下拉菜单 -->
     <el-dropdown>
         <span class="el-dropdown-link">
-            admin
+            {{userStore.username}}
             <el-icon class="el-icon--right">
                 <arrow-down />
             </el-icon>
@@ -21,7 +21,9 @@
 
 <script setup lang="ts">
 import useLayOutSettingStore from '@/store/modules/setting';
+import useUserStore from '@/store/modules/user';
 let layoutSettingStore = useLayOutSettingStore();
+let userStore = useUserStore();
 // 刷新按钮点击回调
 const updateRef = ()=>{
     layoutSettingStore.refsh = !layoutSettingStore.refsh;

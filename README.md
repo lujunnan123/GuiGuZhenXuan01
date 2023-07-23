@@ -914,3 +914,74 @@ watch(()=>layoutSettingStore.refsh,()=>{
 </script>
 ```
 
+##### 获取用户信息与token理解
+
+实现：首页挂载时，向服务器发送请求，将数据存储在仓库中。
+
+步骤：
+
+首页挂载时，调用仓库中的数据请求方法userInfo()
+
+```vue
+src\views\home\index.vue
+<template>
+    <div>
+        <h1>我是一级路由-登录成功后的数据</h1>
+    </div>
+</template>
+<script lang="ts" setup>
+// 引入组合式API函数 生命周期函数
+import { onMounted } from 'vue';
+// 引入仓库
+import useUserStore from '@/store/modules/user';
+let useStore = useUserStore();
+// 首页挂载完毕发送请求 获取用户信息
+onMounted(() => {
+    useStore.userInfo()
+}),
+</script>
+```
+
+在仓库中请求数据，并进行保存
+
+```tsx
+ // 存储数据地方
+    state:():UserState => {
+        return {
+            token:GET_TOKEN(),// 用户唯一标识
+            menuRoutes:constantRoute,
+            username:'',
+            avatar:''
+        }
+    }, 
+// 异步|逻辑地方
+    actions:{
+        // 用户登录的方法
+        async userLogin(data:loginForm){
+    	....
+    	},
+        // 获取用户信息的方法
+        async userInfo(){
+           let result = await reqUserInfo();
+           console.log(result);         
+            
+        }
+    },
+```
+
+请求到token后，请求拦截器中需要将token设置为响应头。用于区分不同的响应用户。
+
+```ts
+src\utils\request.ts
+// 第二步：request实例添加请求与响应拦截器
+request.interceptors.request.use((config)=>{
+    // 获取用户相关的小仓库：获取仓库内部token，登录成功以后携带给服务器
+    let userStore = useUserStore();
+    if(userStore.token){
+        config.headers.token = userStore.token;
+    }
+    // 返回配置对象
+    return config;
+})
+```
+
