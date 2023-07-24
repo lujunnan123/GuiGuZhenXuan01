@@ -13,7 +13,7 @@
         </span>
         <template #dropdown>
             <el-dropdown-menu>
-                <el-dropdown-item>退出登录</el-dropdown-item>
+                <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
         </template>
     </el-dropdown>
@@ -22,8 +22,10 @@
 <script setup lang="ts">
 import useLayOutSettingStore from '@/store/modules/setting';
 import useUserStore from '@/store/modules/user';
+import { useRouter } from 'vue-router';
 let layoutSettingStore = useLayOutSettingStore();
 let userStore = useUserStore();
+let $router = useRouter();
 // 刷新按钮点击回调
 const updateRef = ()=>{
     layoutSettingStore.refsh = !layoutSettingStore.refsh;
@@ -39,6 +41,14 @@ const fullScreen = ()=>{
         // 退出全屏模式
         document.exitFullscreen();
     }
+}
+// 退出按钮点击回调
+const logout = ()=>{
+    // 1.需要向服务器发请求（退出登录接口）
+    // 2.清楚仓库中有关用户的数据
+    userStore.uesrLogout();
+    // 3.跳转登录页面
+    $router.push({path:'/login'});
 }
 </script>
 

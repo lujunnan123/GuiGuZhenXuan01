@@ -17,6 +17,9 @@ dependencies:
   mockjs:
     specifier: ^1.1.0
     version: registry.npmmirror.com/mockjs@1.1.0
+  nprogress:
+    specifier: ^0.2.0
+    version: registry.npmmirror.com/nprogress@0.2.0
   path:
     specifier: ^0.12.7
     version: registry.npmmirror.com/path@0.12.7
@@ -2211,6 +2214,12 @@ packages:
     resolution: {integrity: sha512-Wj7+EJQ8mSuXr2iWfnujrimU35R2W4FAErEyTmJoJ7ucwTn2hOUSsRehMb5RSYkxXGTM7Y9QpvPmp++w5ftoJw==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/normalize-wheel-es/-/normalize-wheel-es-1.2.0.tgz}
     name: normalize-wheel-es
     version: 1.2.0
+    dev: false
+
+  registry.npmmirror.com/nprogress@0.2.0:
+    resolution: {integrity: sha512-I19aIingLgR1fmhftnbWWO3dXc0hSxqHQHQb3H8m+K3TnEn/iSeTZZOyvKXWqQESMwuUVnatlCnZdLBZZt2VSA==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/nprogress/-/nprogress-0.2.0.tgz}
+    name: nprogress
+    version: 0.2.0
     dev: false
 
   registry.npmmirror.com/nth-check@2.1.1:

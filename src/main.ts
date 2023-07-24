@@ -14,7 +14,8 @@ import 'virtual:svg-icons-register'
 import "@/styles/index.scss"
 // 引入ELPLUS图标
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-
+// 引入路由鉴权文件
+import './permisstion.ts';
 // 登录接口
 axios({
     url:'/api/user/login',

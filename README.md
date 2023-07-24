@@ -985,3 +985,69 @@ request.interceptors.request.use((config)=>{
 })
 ```
 
+##### 退出登录业务
+
+给退出按钮绑定点击事件， 事件需要完成：
+
+ // 1.需要向服务器发请求（退出登录接口）
+
+  // 2.清楚仓库中有关用户的数据
+
+  // 3.跳转登录页面
+
+
+
+##### 路由鉴权之进度条业务
+
+创建permisstion.ts文件，创建全局路由守卫。
+
+```ts
+src\permission.ts
+// 路由鉴权：鉴权，项目当中路由能不能被访问的权限设置（某个路由什么条件下可以访问、什么条件下不可以访问）
+import router from "./router";
+
+// 全局前置守卫
+router.beforeEach((to, from, next) => {
+    // to ：将要访问的那个路由
+    // from :你从那个路由而来
+    // next ：路由的放行函数
+})
+
+// 全局后置守卫
+router.afterEach((to, from) => {
+    // to and from are both route objects.
+})
+```
+
+在入口文件main.ts中进行引入
+
+```ts
+// 引入路由鉴权文件
+import './permisstion.ts';
+```
+
+
+
+添加进度条
+
+安装 ： ``pnpm i nprogress``
+
+导入使用：
+
+```ts
+src\permission.ts
+import nprogress from 'nprogress';
+// 引入进度条样式
+import "nprogress/nprogress.css"
+// 全局前置守卫
+router.beforeEach((to, from, next) => {
+    nprogress.start();
+    next();
+    
+})
+// 全局后置守卫
+router.afterEach((to, from) => {
+    nprogress.done()
+})
+```
+

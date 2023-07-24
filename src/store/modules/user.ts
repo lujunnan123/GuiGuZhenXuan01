@@ -6,7 +6,7 @@ import type {UserState} from "./types/type"
 // 引入接口
 import { reqLogin,reqUserInfo } from "@/api/user";
 // 引入操作存储本地数据工具方法
-import { SET_TOKEN,GET_TOKEN } from "@/utils/token";
+import { SET_TOKEN,GET_TOKEN,REMOVE_TOKEN } from "@/utils/token";
 // 引入路由(常量路由)
 import { constantRoute } from "@/router/routes";
 // 创建用户小仓库
@@ -49,6 +49,12 @@ let useUserStore = defineStore('User',{
             
            }
             
+        },
+        uesrLogout(){
+            this.username = '';
+            this.avatar = '';
+            this.token = '';
+            REMOVE_TOKEN();
         }
     },
     getters:{
