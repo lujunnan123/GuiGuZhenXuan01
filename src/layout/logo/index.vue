@@ -1,5 +1,5 @@
 <template>
-    <div class="logo">
+    <div class="logo" >
         <img  :src="setting.logo" alt="">
         <p>{{setting.title}}</p>
     </div>

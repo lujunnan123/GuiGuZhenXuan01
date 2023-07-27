@@ -183,7 +183,7 @@ import 'virtual:svg-icons-register'
    
    **在src/components目录下创建一个SvgIcon组件:代表如下**
    
-   ```
+   ```vue
    <template>
      <div>
        <svg :style="{ width: width, height: height }">
@@ -273,7 +273,7 @@ import '@/styles/index.scss'
 
 在vite.config.ts文件配置如下:
 
-```
+```js
 export default defineConfig((config) => {
 	css: {
       preprocessorOptions: {
@@ -301,7 +301,7 @@ pnpm install -D vite-plugin-mock mockjs
 
 在 vite.config.js 配置文件启用插件。
 
-```
+```js
 import { UserConfigExport, ConfigEnv } from 'vite'
 import { viteMockServe } from 'vite-plugin-mock'
 import vue from '@vitejs/plugin-vue'
@@ -321,7 +321,7 @@ export default ({ command })=> {
 
 在mock文件夹内部创建一个user.ts文件
 
-```
+```ts
 //用户信息数据
 function createUserList() {
     return [
@@ -407,7 +407,7 @@ pnpm install axios
 
 比如:下面方式
 
-```
+```ts
 //统一管理咱们项目用户相关的接口
 
 import request from '@/utils/request'
@@ -1051,3 +1051,137 @@ router.afterEach((to, from) => {
 })
 ```
 
+##### 路由鉴权
+
+业务：未登录状态不能进入其他模块组件，只能留在 /login ； 登录成功后不能访问 /login
+
+实现：根据苍鹭仓库中的token判断用户是否登录。在permisstion文件中进行路由限制。
+
+步骤：
+
+在组件外部，使用pinia仓库，需要重新导入pinia。
+
+```ts
+src\permisstion.ts
+// 引入pinia仓库
+import pinia from "./store";
+import useUserStore from "./store/modules/user";
+let userStore = useUserStore(pinia);
+router.beforeEach((to, from, next) => {
+    // to and from are both route objects. must call `next`.
+    // to ：将要访问的那个路由
+    // from :你从那个路由而来
+    // next ：路由的放行函数
+    nprogress.start();
+    // 获取token判断用户是否登录
+    let token = userStore.token;
+    if(token){
+        // 登录成功后，不能再访问login
+        if(to.path=='/login'){
+            next({path:'/'})
+        }else{
+            next();
+        }
+    }else{
+        // 未登录状态 只能访问login
+        if(to.path=='/login'){
+            next();
+        }else{
+            next({path:'/login',query:{redirect:to.path}})
+        }
+    }  
+})
+```
+
+
+
+解决不同组件中刷新后，用户信息丢失问题。
+
+原本解决方案，在每个组件加载时，重新发送数据请求，重复代码多。
+
+现在全局路由守卫中，在前置路由守卫中进行判断是否含有用户信息，在发请求，写一遍代码即可。
+
+```ts
+
+// 全局前置守卫
+router.beforeEach(async (to, from, next) => {
+    nprogress.start();
+    // 获取token判断用户是否登录
+    let token = userStore.token;
+    // 获取用户名字
+    let username = userStore.username;
+    if (token) {
+        if (to.path == '/login') {
+            // 登录成功后，不能再访问login
+            next({ path: '/' })
+        } else {
+            // 登录成功状态，可以访问其它路由
+            if (username) {
+                // 该组件有用户信息
+                next();
+            } else {
+                try {
+                    // 如果该组件没有用户信息，发请求获取用户信息后，再放行
+                    await userStore.userInfo();
+                    next()
+                } catch (error) {
+
+                }
+            }
+        }
+    } else {
+        // 未登录状态 只能访问login
+        if (to.path == '/login') {
+            next();
+        } else {
+            next({ path: '/login', query: { redirect: to.path } })
+        }
+    }
+})
+```
+
+
+
+优化：token过期问题
+
+```ts
+try {
+    // 如果该组件没有用户信息，发请求获取用户信息后，再放行
+    await userStore.userInfo();
+    next()
+} catch (error) {
+    // 两种情况
+    // 1.token过期：获取不到用户信息
+    // 2.用户手动修改本地存储的token
+    // 进行操作：退出登录 -> 清除用户相关数据
+    userStore.uesrLogout();
+    next({path:'/login'})
+}
+```
+
+
+
+优化：浏览器标签名字变化
+
+```ts
+
+// 全局前置守卫
+router.beforeEach(async (to, from, next) => {
+    document.title = '硅谷甄选-'+to.meta.title;
+    ......
+}
+```
+
+
+
+##### 真实接口替换mock接口
+
+> 接口文档：
+>
+> 服务器域名：http://sph-api.atguigu.cn
+>
+> swagger文档：
+>
+> http://39.98123.211:8510/swagger-ui.html
+>
+> http://139.198.104.58:8212/swagger-ui.html#/
