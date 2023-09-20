@@ -33,7 +33,7 @@ let useStore = useUserStore();
 // 获取el-form组件
 let loginForms = ref();
 // 收集账号与密码
-let loginForm = reactive({ username: 'admin', password: '111111' })
+let loginForm = reactive({ username: 'admin', password: 'atguigu123' })
 // 获取路由器
 let $router = useRouter();
 // 定义变量控制按钮加载效果
@@ -67,6 +67,7 @@ const login = async () => {
             type: 'error',
             message: (error as Error).message
         })
+        console.log(error)
     }
 }
 // 自定义校验规则函数 (_:any 下划线占位

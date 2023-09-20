@@ -6,13 +6,13 @@ import useUserStore from "@/store/modules/user";
 // 第一步：利用axios对象中的create方法，器创建axios实例
 let request = axios.create({
     // 基础路径
-    baseURL:'/api',
+    baseURL:import.meta.env.VITE_APP_BASE_API,
     timeout:5000
 });
 // 第二步：request实例添加请求与响应拦截器
 request.interceptors.request.use((config)=>{
     // 获取用户相关的小仓库：获取仓库内部token，登录成功以后携带给服务器
-    let userStore = useUserStore();
+    const userStore = useUserStore();
     if(userStore.token){
         config.headers.token = userStore.token;
     }
@@ -28,6 +28,8 @@ request.interceptors.response.use((response)=>{
 },(error)=>{
     // 失败回调：处理http网络错误的
     // 定义一个变量：存储网络错误信息
+    console.log(error);
+    
     let message = '';
     let status = error.response.status;
     switch(status){

@@ -1185,3 +1185,62 @@ router.beforeEach(async (to, from, next) => {
 > http://39.98123.211:8510/swagger-ui.html
 >
 > http://139.198.104.58:8212/swagger-ui.html#/
+
+
+
+配置：解决跨域问题
+
+在vite.config.ts文件中导入loadEnv方法（用于加载各个环境下的变量：开发环境、测试环境、上线环境）
+
+```ts
+vite.config.ts
+import { defineConfig,loadEnv } from 'vite'
+export default defineConfig(({command}) => {
+  // 获取各个环境下的定义的变量
+  // 参数一 mode:指定环境  参数二：文件根目录
+  let env = loadEnv(mode,process.cwd());
+  return {
+      
+    // 代理跨域
+    server:{        
+        plugins: [
+            ......
+              proxy:{
+                [env.VITE_APP_BASE_API]:{
+                  // 获取数据的服务器地址设置
+                  target:env.VITE_SERVE,
+                  // 需要代理跨域
+                  changeOrigin:true,
+                  // 路径重写
+                  rewrite:(path)=>path.replace(/^\/api/,''),
+                }
+              }
+            }
+          }
+         ]
+	})
+```
+
+
+
+替换接口
+
+```ts
+src\api\user\index.ts
+// 统一管理项目用户相关的接口
+import request from '@/utils/request'
+
+// 统一管理接口
+enum API{
+    LOGIN_URL = "/admin/acl/index/login",
+    USERINFO_URL = "/admin/acl/index/info",
+    LOGOUT_URL = "/admin/acl/index/logout"
+}
+// 登录接口方法
+export const reqLogin = (data:any) => request.post<any,any>(API.LOGIN_URL,data);
+// 获取用户信息接口方法
+export const reqUserInfo = ()=>request.get<any,any>(API.USERINFO_URL);
+// 退出登录
+export const reqLogout = ()=>request.post<any,any>(API.LOGOUT_URL)
+```
+
