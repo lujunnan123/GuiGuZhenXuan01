@@ -8,6 +8,7 @@ import { reqLogin,reqUserInfo,reqLogout } from "@/api/user";
 import { SET_TOKEN,GET_TOKEN,REMOVE_TOKEN } from "@/utils/token";
 // 引入路由(常量路由)
 import { constantRoute } from "@/router/routes";
+import { loginFormData, loginResponseData, userInfoResponseData } from "@/api/user/type";
 // 创建用户小仓库
 let useUserStore = defineStore('User',{
     // 存储数据地方
@@ -22,8 +23,8 @@ let useUserStore = defineStore('User',{
     // 异步|逻辑地方
     actions:{
         // 用户登录的方法
-        async userLogin(data:any){
-            let result:any = await reqLogin(data);   
+        async userLogin(data:loginFormData){
+            let result:loginResponseData = await reqLogin(data);   
             console.log(result);            
             // 登录成功：200 -> token
             // 登录失败：201 -> 显示登录失败信息
@@ -40,7 +41,7 @@ let useUserStore = defineStore('User',{
         },
         // 获取用户信息的方法
         async userInfo(){
-           let result = await reqUserInfo();
+           let result:userInfoResponseData = await reqUserInfo();
            // 如果获取用户信息成功，存储一下用户信息
            if(result.code == 200){
                 this.username = result.data.name;
