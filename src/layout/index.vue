@@ -90,10 +90,10 @@ let userStore = useUserStore();
         position: absolute;
         width: calc(100% - $base-menu-width);
         height: calc(100vh - $base-tabbar-height);
-        background: green;
+        // background: green;
         left: $base-menu-width;
         top: $base-tabbar-height;
-        padding: 20px;
+        // padding: 10px;
         overflow: auto;
         &.fold{
             width:calc(100vw - $base-menu-min-width);
