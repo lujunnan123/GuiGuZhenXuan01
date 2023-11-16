@@ -29,27 +29,27 @@
             <div class="dialog">
 
                 <el-dialog v-model="dialogVisible" title="请上传">
-                <el-form ref="form"  style="width:80%" :inline="false" size="normal"  > 
-                    <el-form-item label="品牌名称" label-width="80px" >
-                        <el-input placeholder="请输入品牌名称"></el-input>
-                    </el-form-item>
-                    <el-form-item label="品牌LOGO" size="normal" >
-                        <el-upload class="avatar-uploader"
-                            action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" :show-file-list="false"
-                            :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-                            <img style="width: 100px;height:100px;" v-if="imageUrl" :src="imageUrl" class="avatar" />
-                            <el-icon v-else class="avatar-uploader-icon">
-                                <Plus />
-                            </el-icon>
-                        </el-upload>
-                    </el-form-item>
-                </el-form>
-                <template #footer>
-                    <el-button @click="cancel">取消</el-button>
-                    <el-button type="primary" @click="onSubmit">确定</el-button>
-                </template>
+                    <el-form ref="form" style="width:80%" :inline="false" size="normal">
+                        <el-form-item label="品牌名称" label-width="80px">
+                            <el-input placeholder="请输入品牌名称" v-model="trademarkParams.tmName"></el-input>
+                        </el-form-item>
+                        <el-form-item label="品牌LOGO" size="normal">
+                            <el-upload class="avatar-uploader" action="/api/admin/product/fileUpload"
+                                :show-file-list="false" :on-success="handleAvatarSuccess"
+                                :before-upload="beforeAvatarUpload">
+                                <img style="width: 100px;height:100px;" v-if="trademarkParams.logoUrl" :src="trademarkParams.logoUrl" class="avatar" />
+                                <el-icon v-else class="avatar-uploader-icon">
+                                    <Plus />
+                                </el-icon>
+                            </el-upload>
+                        </el-form-item>
+                    </el-form>
+                    <template #footer>
+                        <el-button @click="cancel">取消</el-button>
+                        <el-button type="primary" @click="onSubmit">确定</el-button>
+                    </template>
 
-            </el-dialog>
+                </el-dialog>
             </div>
         </el-card>
     </div>
@@ -58,12 +58,18 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
 import { reqHasTrademark } from '@/api/product/trademark/index'
-import { Records, trademarkResData } from '@/api/product/trademark/type';
+import { Records, trademark, trademarkResData } from '@/api/product/trademark/type';
+import type { UploadProps } from 'element-plus';
+import { ElMessage } from 'element-plus';
 // 定义该页面所需的变量
 let pageNo = ref<number>(1);
 let pageSize = ref<number>(3);
 let total = ref<number>(0)
 let trademarkArr = reactive<Records>([])
+let trademarkParams = reactive<trademark>({
+    "tmName": '',
+    "logoUrl": ''
+})
 let dialogVisible = ref(false)
 onMounted(() => {
     getHasTrademark()
@@ -88,52 +94,85 @@ const changePageSize = () => {
     getHasTrademark();
 }
 // 对话框-取消按钮
-const cancel = ()=>{
+const cancel = () => {
     dialogVisible.value = false;
 }
-// 对话框-取消按钮
-const onSubmit = ()=>{
+// 对话框-确定按钮
+const onSubmit = () => {
     dialogVisible.value = false;
+}
+// 对话框-上传文件-成功回调
+
+const handleAvatarSuccess: UploadProps['onSuccess'] = (response:any, uploadFile:any) => {
+    console.log('执行了 文件上传success');
+    console.log(response);
+    // response:即为当前这次上传图片的额post请求服务器返回的数据
+    // 收集上传图片的地址
+    trademarkParams.logoUrl = response.data;
+
+    
+}
+// 对话框-上传文件-上传之前回调
+const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile:any) => {
+    // 要求上传文件格式 png/jpg/gif 4M
+    if (['image/png', 'image/jpeg', 'image/gif'].includes(rawFile.type)) {
+        if (rawFile.size / 1024 / 1024 < 4) {
+            return true
+        } else {
+            ElMessage({
+                type: 'error',
+                message: "文件超出上传限制"
+            })
+            return false
+        }
+    } else {
+        ElMessage({
+            type: 'error',
+            message: '文件格式不正确'
+        })
+        return false
+    }
+    console.log(rawFile);
+
 }
 </script>
 
 <style scoped lang="scss">
 .trademark {
     .box-card {
+
         // margin: 20px;
-        .dialog{
-           
-        }   
+        .dialog {}
     }
 }
 </style>
 <style scoped>
 .avatar-uploader .avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
+    width: 178px;
+    height: 178px;
+    display: block;
 }
 </style>
 
 <style>
 .avatar-uploader .el-upload {
-  border: 1px dashed var(--el-border-color);
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: var(--el-transition-duration-fast);
+    border: 1px dashed var(--el-border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: var(--el-transition-duration-fast);
 }
 
 .avatar-uploader .el-upload:hover {
-  border-color: var(--el-color-primary);
+    border-color: var(--el-color-primary);
 }
 
 .el-icon.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  text-align: center;
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    text-align: center;
 }
 </style>

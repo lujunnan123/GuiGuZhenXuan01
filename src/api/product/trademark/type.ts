@@ -5,8 +5,6 @@ export interface ResponseData {
 }
 export interface trademark {
     "id"?: number,
-    "createTime": string,
-    "updateTime": string,
     "tmName": string,
     "logoUrl": string
 }
