@@ -11,9 +11,9 @@ export const reqHasTrademark = (page:number,limit:number)=>request.get<any,trade
 export const reqAddTrademark = (data:trademark)=>{
     if (data.id) {
         // 修改对应id数据
-        return request.put<any,any>(API.EDITTADEMARK+`/${data.logoUrl}/${data.tmName}`);
+        return request.put<any,any>(API.EDITTADEMARK,data);
     }else{
         // 新增数据
-        return request.post<any,any>(API.ADDTADEMARK+`/${data.logoUrl}/${data.tmName}`);
+        return request.post<any,any>(API.ADDTADEMARK,data);
     }
 }
