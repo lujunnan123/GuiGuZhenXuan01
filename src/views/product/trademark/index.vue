@@ -15,8 +15,10 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="品牌操作" align="center">
-                    <el-button type="success" size="small" @click="dialogVisible = true" icon="Edit"></el-button>
-                    <el-button type="danger" size="small" @click="" icon="Delete"></el-button>
+                    <template #="{ row, $index }">
+                        <el-button type="success" size="small" @click="editRow(row)" icon="Edit"></el-button>
+                        <el-button type="danger" size="small" @click="" icon="Delete"></el-button>
+                    </template>
                 </el-table-column>
             </el-table>
             <!-- 分页器 -->
@@ -28,7 +30,7 @@
             <!-- 对话框 -->
             <div class="dialog">
 
-                <el-dialog v-model="dialogVisible" title="请上传">
+                <el-dialog v-model="dialogVisible" :title="trademarkParams.id?'修改':'新增'">
                     <el-form ref="form" style="width:80%" :inline="false" size="normal">
                         <el-form-item label="品牌名称" label-width="80px">
                             <el-input placeholder="请输入品牌名称" v-model="trademarkParams.tmName"></el-input>
@@ -74,12 +76,19 @@ let dialogVisible = ref(false)
 onMounted(() => {
     getHasTrademark()
 })
+// 修改按钮
+const editRow = (row:trademark)=>{
+    dialogVisible.value = true;
+    trademarkParams =  Object.assign(trademarkParams,row)
+    
+}
 // 添加按钮回调
 const AddTrademark = ()=>{
     dialogVisible.value = true;
     // 清空对话框内容
     trademarkParams.tmName = '';
-    trademarkParams.logoUrl = ''
+    trademarkParams.logoUrl = '';
+    trademarkParams.id = 0;
 }
 // 获取已有品牌数据
 const getHasTrademark = async (page = 1) => {
@@ -108,17 +117,19 @@ const cancel = () => {
 const onSubmit = async() => {
     let result:any =await reqAddTrademark(trademarkParams);
     if(result.code == 200){
-        dialogVisible.value = false;
         ElMessage({
             type:'success',
-            message:'添加图片成功'
+            message:trademarkParams.id?'修改图片成功':'添加图片成功'
         })
+        // 重新获取数据 如果是修改，完成后留在当前页面；如果是新增，完成后回到第一页
+        getHasTrademark(trademarkParams.id?pageNo.value:1);
     }else{
         ElMessage({
             type:'error',
-            message:'添加失败'
+            message:trademarkParams.id?'修改图片失败':'添加图片失败'
         })
     }
+    dialogVisible.value = false;
     
 }
 // 对话框-上传文件-上传之前回调
@@ -146,8 +157,6 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile:any) => {
 }
 // 对话框-上传文件-成功回调 ！！！！待解决！！！文件上传成功回调函数未执行
 const handleAvatarSuccess: UploadProps['onSuccess'] = (response:any, uploadFile:any) => {
-    console.log('执行了 文件上传success');
-    console.log(response);
     // response:即为当前这次上传图片的额post请求服务器返回的数据
     // 收集上传图片的地址
     trademarkParams.logoUrl = response.data;    
@@ -161,7 +170,7 @@ const handleAvatarSuccess: UploadProps['onSuccess'] = (response:any, uploadFile:
 .trademark {
     .box-card {
 
-        // margin: 20px;
+        margin: 20px;
         .dialog {}
     }
 }
