@@ -3,7 +3,8 @@ import { trademark, trademarkResData } from "./type";
 enum API{
     TRADEMARK_URL="/admin/product/baseTrademark",
     ADDTADEMARK = "/admin/product/baseTrademark/save",
-    EDITTADEMARK = "/admin/product/baseTrademark/update"
+    EDITTADEMARK = "/admin/product/baseTrademark/update",
+    DELETETADEMARK = "/admin/product/baseTrademark/remove"
 }
 // 获取已有品牌的信息
 export const reqHasTrademark = (page:number,limit:number)=>request.get<any,trademarkResData>(API.TRADEMARK_URL+`/${page}/${limit}`)
@@ -17,3 +18,5 @@ export const reqAddTrademark = (data:trademark)=>{
         return request.post<any,any>(API.ADDTADEMARK,data);
     }
 }
+// 删除品牌信息
+export const reqDeleteTrademark = (id:number)=>request.delete(API.DELETETADEMARK+id)

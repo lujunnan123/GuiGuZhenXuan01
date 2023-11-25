@@ -16,8 +16,12 @@
                 </el-table-column>
                 <el-table-column label="品牌操作" align="center">
                     <template #="{ row, $index }">
-                        <el-button type="success" size="small" @click="editRow(row)" icon="Edit"></el-button>
-                        <el-button type="danger" size="small" @click="" icon="Delete"></el-button>
+                        <el-button type="success" size="small" @click="editRow(row)" icon="Edit"></el-button>                        
+                        <el-popconfirm icon="Delete" title="确定删除这条数据？" @confirm="deleteRow(row.id)">
+                            <template #reference>                                
+                                <el-button type="danger" size="small"  icon="Delete"></el-button>
+                            </template>
+                        </el-popconfirm>
                     </template>
                 </el-table-column>
             </el-table>
@@ -30,16 +34,18 @@
             <!-- 对话框 -->
             <div class="dialog">
 
-                <el-dialog v-model="dialogVisible" :title="trademarkParams.id?'修改':'新增'">
-                    <el-form ref="form" style="width:80%" :inline="false" size="normal" :rules="rules" :model="trademarkParams">
+                <el-dialog v-model="dialogVisible" :title="trademarkParams.id ? '修改' : '新增'">
+                    <el-form ref="form" style="width:80%" :inline="false" size="normal" :rules="rules"
+                        :model="trademarkParams">
                         <el-form-item label="品牌名称" label-width="80px" prop="tmName">
                             <el-input placeholder="请输入品牌名称" v-model="trademarkParams.tmName"></el-input>
                         </el-form-item>
                         <el-form-item label="品牌LOGO" size="normal" prop="logoUrl">
                             <el-upload class="avatar-uploader" action="/api/admin/product/fileUpload"
-                                :show-file-list="false"  :on-success="handleAvatarSuccess"
+                                :show-file-list="false" :on-success="handleAvatarSuccess"
                                 :before-upload="beforeAvatarUpload">
-                                <img style="width: 100px;height:100px;" v-if="trademarkParams.logoUrl" :src="trademarkParams.logoUrl" class="avatar" />
+                                <img style="width: 100px;height:100px;" v-if="trademarkParams.logoUrl"
+                                    :src="trademarkParams.logoUrl" class="avatar" />
                                 <el-icon v-else class="avatar-uploader-icon">
                                     <Plus />
                                 </el-icon>
@@ -59,11 +65,10 @@
 
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
-import { reqAddTrademark, reqHasTrademark } from '@/api/product/trademark/index'
+import { reqAddTrademark, reqDeleteTrademark, reqHasTrademark } from '@/api/product/trademark/index'
 import { Records, trademark, trademarkResData } from '@/api/product/trademark/type';
 import type { UploadProps } from 'element-plus';
 import { ElMessage } from 'element-plus';
-import { Value } from 'sass';
 // 定义该页面所需的变量
 let pageNo = ref<number>(1);
 let pageSize = ref<number>(3);
@@ -79,15 +84,33 @@ onMounted(() => {
     getHasTrademark()
 })
 // 修改按钮
-const editRow = (row:trademark)=>{
+const editRow = (row: trademark) => {
     // 清理校验残留
     form.value?.clearValidate()
 
     dialogVisible.value = true;
-    trademarkParams =  Object.assign(trademarkParams,row)    
+    trademarkParams = Object.assign(trademarkParams, row)
+}
+// 删除按钮
+const deleteRow = async (id: number) => {
+    let result: any = await reqDeleteTrademark(id);
+    if(result.code == 200){
+        ElMessage({
+            type:'success',
+            message:'删除品牌成功'
+        })
+        // 删除后判断该页面是否还有数据，有留在此页面，没有返回上一页
+        getHasTrademark(trademarkArr.length>1?pageNo.value:pageNo.value-1)
+    }else{
+        ElMessage({
+            type:'error',
+            message:'删除品牌失败'
+        })
+
+    }
 }
 // 添加按钮回调
-const AddTrademark = ()=>{
+const AddTrademark = () => {
     // 清理校验残留
     form.value?.clearValidate()
     dialogVisible.value = true;
@@ -120,30 +143,30 @@ const cancel = () => {
     dialogVisible.value = false;
 }
 // 对话框-确定按钮
-const onSubmit = async() => {
+const onSubmit = async () => {
     // 发请求之前对整个表单数据进行校验 
     // 校验成功后执行后面语句
     await form.value.validate();
 
-    let result:any =await reqAddTrademark(trademarkParams);
-    if(result.code == 200){
+    let result: any = await reqAddTrademark(trademarkParams);
+    if (result.code == 200) {
         ElMessage({
-            type:'success',
-            message:trademarkParams.id?'修改图片成功':'添加图片成功'
+            type: 'success',
+            message: trademarkParams.id ? '修改图片成功' : '添加图片成功'
         })
         // 重新获取数据 如果是修改，完成后留在当前页面；如果是新增，完成后回到第一页
-        getHasTrademark(trademarkParams.id?pageNo.value:1);
-    }else{
+        getHasTrademark(trademarkParams.id ? pageNo.value : 1);
+    } else {
         ElMessage({
-            type:'error',
-            message:trademarkParams.id?'修改图片失败':'添加图片失败'
+            type: 'error',
+            message: trademarkParams.id ? '修改图片失败' : '添加图片失败'
         })
     }
     dialogVisible.value = false;
-    
+
 }
 // 对话框-上传文件-上传之前回调
-const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile:any) => {
+const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile: any) => {
     // 要求上传文件格式 png/jpg/gif 4M
     if (['image/png', 'image/jpeg', 'image/gif'].includes(rawFile.type)) {
         if (rawFile.size / 1024 / 1024 < 4) {
@@ -166,40 +189,40 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile:any) => {
 
 }
 // 对话框-上传文件-成功回调
-const handleAvatarSuccess: UploadProps['onSuccess'] = (response:any, uploadFile:any) => {
+const handleAvatarSuccess: UploadProps['onSuccess'] = (response: any, uploadFile: any) => {
     // response:即为当前这次上传图片的额post请求服务器返回的数据
     // 收集上传图片的地址
-    trademarkParams.logoUrl = response.data;    
+    trademarkParams.logoUrl = response.data;
     // 上传成功后，清除验证信息
     form.value.clearValidate('logoUrl')
-} 
+}
 // 品牌名称验证规则
-const validatorTmName = (rule:any,value:any,callBack:any)=>{
-    if(value.trim().length >=2){
+const validatorTmName = (rule: any, value: any, callBack: any) => {
+    if (value.trim().length >= 2) {
         callBack()
-    }else{
+    } else {
         callBack(new Error('品牌名称需大于两位'))
     }
-    
+
 }
 // 图片上传验证
-const validatorlogoUrl = (rule:any,value:any,callBack:any)=>{
+const validatorlogoUrl = (rule: any, value: any, callBack: any) => {
     // value为图片上传路径
-   if(value.length>0){
-    callBack()
-   }else{
-    callBack(new Error('不能为空'))
-   }
-    
-    
+    if (value.length > 0) {
+        callBack()
+    } else {
+        callBack(new Error('不能为空'))
+    }
+
+
 }
 // 表单验证
 let rules = reactive({
-    tmName:[
-        { required:true, trigger: 'blur',validator:validatorTmName },
+    tmName: [
+        { required: true, trigger: 'blur', validator: validatorTmName },
     ],
-    logoUrl:[
-        {require:true,trigger:'blur',validator:validatorlogoUrl}
+    logoUrl: [
+        { require: true, trigger: 'blur', validator: validatorlogoUrl }
     ]
 })
 
@@ -210,6 +233,7 @@ let rules = reactive({
     .box-card {
 
         margin: 20px;
+
         .dialog {}
     }
 }
