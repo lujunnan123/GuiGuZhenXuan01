@@ -16,6 +16,8 @@ import "@/styles/index.scss"
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 // 引入路由鉴权文件
 import './permisstion.ts';
+// 引入项目中的全局组件
+import Category from '@/components/Category/index.vue'
 // 登录接口
 axios({
     url:'/api/user/login',
@@ -35,4 +37,5 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 app.use(router);
 app.use(ElementPlus);
 app.use(pinia);
+app.component('Category',Category);
 app.mount('#app')
