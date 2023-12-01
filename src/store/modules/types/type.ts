@@ -6,3 +6,8 @@ export interface UserState {
     username:string,
     avatar:string
 }
+// 定义分类仓库state对象的ts类型
+export interface CategoryState{
+    c1Id:string|number,
+    c1Arr:[]
+}
