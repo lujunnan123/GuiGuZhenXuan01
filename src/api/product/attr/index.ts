@@ -3,7 +3,7 @@ import { CategoryResponse } from "./type";
 enum API {
     GETC1_URL="/admin/product/getCategory1",
     GETC2_URL="/admin/product/getCategory2/",
-    GETC3_URL="/admin/product/getCategory2/"
+    GETC3_URL="/admin/product/getCategory3/"
 }
 // 获取一级分类列表接口
 export const reqC1 = ()=>request.get<any,CategoryResponse>(API.GETC1_URL);

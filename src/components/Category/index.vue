@@ -3,18 +3,18 @@
         <el-form inline="true">
             <el-form-item label="一级分类" size="normal">
                 <!-- value即为select下拉选择的数据 -->
-                <el-select v-model="categoryStore.c1Id">
+                <el-select v-model="categoryStore.c1Id" @change="handle">
                     <el-option v-for="(c1, index) in categoryStore.c1Arr" :key="c1.id" :label="c1.name" :value="c1.id"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="二级分类" size="normal">
-                <el-select value-key="" placeholder="" clearable filterable @change="">
-                    <el-option>ALL</el-option>
+                <el-select v-model="categoryStore.c2Id" @change="handle2">
+                    <el-option v-for="(c2, index) in categoryStore.c2Arr" :key="c2.id" :label="c2.name" :value="c2.id"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="三级分类" size="normal">
-                <el-select value-key="" placeholder="" clearable filterable @change="">
-                    <el-option>ALL</el-option>
+                <el-select v-model="categoryStore.c3Id" @change="">
+                    <el-option v-for="(c3, index) in categoryStore.c3Arr" :key="c3.id" :label="c3.name" :value="c3.id"></el-option>
                 </el-select>
             </el-form-item>
         </el-form>
@@ -33,6 +33,24 @@ onMounted(() => {
 // 通知仓库获取一级分类数据
 const getC1 = ()=>{
     categoryStore.getC1();
+}
+// 当一级选项发生变化时函数回调（即获取到了二级分类列表发请求的参数id）
+const handle = ()=>{
+    // 清空二三级分类数据
+    categoryStore.c2Arr=[];
+    categoryStore.c2Id = '';
+    categoryStore.c3Arr = [];
+    categoryStore.c3Id = '';
+    
+    categoryStore.getC2();
+}
+// 当二级选项发生变化时函数回调（即获取到了三级分类列表发请求的参数id）
+const handle2 = ()=>{
+    // 清空二三级分类数据
+    categoryStore.c3Arr = [];
+    categoryStore.c3Id = '';
+    
+    categoryStore.getC3();
 }
 </script>
 
