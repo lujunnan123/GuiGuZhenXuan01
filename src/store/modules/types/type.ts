@@ -13,5 +13,6 @@ export interface CategoryState{
     c2Id:string|number,
     c2Arr:[],
     c3Id:string|number,
-    c3Arr:[]
+    c3Arr:[],
+    allArr:[]
 }

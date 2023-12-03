@@ -13,7 +13,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="三级分类" size="normal">
-                <el-select v-model="categoryStore.c3Id" @change="">
+                <el-select v-model="categoryStore.c3Id" @change="handle3">
                     <el-option v-for="(c3, index) in categoryStore.c3Arr" :key="c3.id" :label="c3.name" :value="c3.id"></el-option>
                 </el-select>
             </el-form-item>
@@ -51,6 +51,10 @@ const handle2 = ()=>{
     categoryStore.c3Id = '';
     
     categoryStore.getC3();
+}
+// 当三级select组件选项发生变化时函数回调（即获取到了所有分类列表发请求的参数id）
+const handle3 = ()=>{
+    categoryStore.getAllData()
 }
 </script>
 

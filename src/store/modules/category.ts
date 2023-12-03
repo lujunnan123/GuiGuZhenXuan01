@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { reqC1, reqC2, reqC3 } from "@/api/product/attr";
+import { reqAll, reqC1, reqC2, reqC3 } from "@/api/product/attr";
 import { CategoryResponse } from "@/api/product/attr/type";
 import { CategoryState } from "./types/type";
 // 关于 category组件  的相关配置仓库
@@ -17,7 +17,8 @@ let useCategoryStore = defineStore('CategoryStore',{
             // 存储三级分类数据
             c3Arr:[],
             // 存储三级分类id
-            c3Id:''
+            c3Id:'',
+            allArr:[]
         }
     },
     actions:{
@@ -41,8 +42,20 @@ let useCategoryStore = defineStore('CategoryStore',{
             if(result.code == 200){
                 this.c3Arr = result.data;
             }            
+        },
+        // 获取分类筛选后的数据
+        async getAllData(){
+            let result:any = await reqAll(this.c1Id,this.c2Id,this.c3Id)
+            if(result.code == 200){
+                this.allArr = result.data
+            }
+            
         }
 
     }
 })
 export default useCategoryStore;
+
+function reqALl() {
+    throw new Error("Function not implemented.");
+}
