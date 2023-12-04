@@ -16,3 +16,25 @@ export interface CategoryState{
     c3Arr:[],
     allArr:[]
 }
+export interface AllData{ 
+    "code": number|string,
+    "message":string,
+    "data": [{
+        "id": number,
+        "createTime": null,
+        "updateTime": null,
+        "attrName": string,
+        "categoryId": number,
+        "categoryLevel": number,
+        "attrValueList": [
+            {
+                "id": number,
+                "createTime": null,
+                "updateTime": null,
+                "valueName": string,
+                "attrId": number
+            },
+        ]
+    }]
+    "ok": boolean
+}
