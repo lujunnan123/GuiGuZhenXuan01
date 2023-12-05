@@ -40,8 +40,7 @@ const handle = ()=>{
     categoryStore.c2Arr=[];
     categoryStore.c2Id = '';
     categoryStore.c3Arr = [];
-    categoryStore.c3Id = '';
-    
+    categoryStore.c3Id = '';    
     categoryStore.getC2();
 }
 // 当二级选项发生变化时函数回调（即获取到了三级分类列表发请求的参数id）

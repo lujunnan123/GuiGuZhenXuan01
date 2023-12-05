@@ -58,10 +58,18 @@
 <script setup lang="ts">
 // 获取分类仓库
 import useCategoryStore from '@/store/modules/category';
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
+import { Attr } from '@/api/user/type';
 let categoryStore = useCategoryStore();
 // 场景切换变量
 let sence = ref<number>(0);
+//收集新增的属性的数据
+let attrParams = reactive<Attr>({
+    attrName:"",// 新增的属性名字
+    attrValueList:[],// 新增的属性值数组
+    categoryId:0,// 三级分类ID
+    categoryLevel:0,// 代表是三级分类
+})
 // 添加属性按钮回调
 const addAttr =()=>{
     sence.value = 1

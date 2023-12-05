@@ -22,3 +22,25 @@ export interface userInfoResponseData extends ResponseData{
         name:string
      }                                                                
 }
+
+
+// 属性值 数据类型
+export interface attrValueArr {
+    attrId?:number,
+    id?:number,
+    valueName:string
+}
+// 存储每一个属性值的数组类型
+export type AttrValueList = attrValueArr[];
+// 属性 数据类型
+export interface Attr{
+    attrName:string,
+    attrValueList:AttrValueList,
+    categoryId:number,
+    categoryLevel:number,
+    id?:number,
+}
+// 属性接口返回的数据类型
+export interface AttrResponseData extends ResponseData{
+    data:Attr[]
+}
