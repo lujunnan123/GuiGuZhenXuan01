@@ -16,6 +16,4 @@ export const reqUserInfo = ()=>request.get<any,userInfoResponseData>(API.USERINF
 // 退出登录post
 export const reqLogout = ()=>request.post<any,any>(API.LOGOUT_URL)
 // 新增or修改属性方法
-export const reqAddOrUpdata = (data:Attr)=>{
-    request.post<any,any>(API.ADDORUPDATAATTR_URL,data)
-}
+export const reqAddOrUpdata = (data:Attr)=>request.post<any,any>(API.ADDORUPDATAATTR_URL,data)
