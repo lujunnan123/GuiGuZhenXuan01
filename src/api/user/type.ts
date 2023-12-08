@@ -28,7 +28,8 @@ export interface userInfoResponseData extends ResponseData{
 export interface attrValueArr {
     attrId?:number,
     id?:number,
-    valueName:string
+    valueName:string,
+    flag?:boolean
 }
 // 存储每一个属性值的数组类型
 export type AttrValueList = attrValueArr[];
@@ -38,7 +39,7 @@ export interface Attr{
     attrValueList:AttrValueList,
     categoryId:number,
     categoryLevel:number,
-    id?:number,
+    id?:number
 }
 // 属性接口返回的数据类型
 export interface AttrResponseData extends ResponseData{
